@@ -116,10 +116,9 @@ function pickKpiMonth(fyLabelStr) {
 
 function renderKpiTiles(kpi) {
   const tiles = [
-    { label: "MTD Gross", value: kpi.mtd.gross, target: kpi.mtd.target, pct: kpi.mtd.grossPct },
-    { label: "MTD Nett", value: kpi.mtd.nett, target: kpi.mtd.target, pct: kpi.mtd.nettPct },
     { label: "YTD Gross", value: kpi.ytd.gross, target: kpi.ytd.target, pct: kpi.ytd.grossPct },
     { label: "YTD Nett", value: kpi.ytd.nett, target: kpi.ytd.target, pct: kpi.ytd.nettPct },
+    { label: "Pipeline", value: kpi.pipeline.actual, target: kpi.pipeline.target, pct: kpi.pipeline.pct },
   ];
   els.kpiRow.innerHTML = "";
   for (const t of tiles) {

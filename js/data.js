@@ -225,6 +225,8 @@ export function kpiSnapshot(fyLabelStr, monthKey) {
   const ytdTarget = fySeries.ytdTarget[i];
   const ytdGross = fySeries.ytdGross[i];
   const ytdNett = fySeries.ytdNett[i];
+  const pipelineActual = fySeries.pipelineActual[i];
+  const pipelineTarget = fySeries.pipelineTarget[i];
 
   return {
     monthKey: fySeries.labels[i],
@@ -241,6 +243,11 @@ export function kpiSnapshot(fyLabelStr, monthKey) {
       nett: ytdNett,
       grossPct: pctOf(ytdGross, ytdTarget),
       nettPct: pctOf(ytdNett, ytdTarget),
+    },
+    pipeline: {
+      actual: pipelineActual,
+      target: pipelineTarget,
+      pct: pctOf(pipelineActual, pipelineTarget),
     },
   };
 }
