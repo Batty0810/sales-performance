@@ -10,8 +10,11 @@ import {
 const STORAGE_KEY = "nymbisPerfTracker.records.v1";
 const DATA_URL = "./data/records.json";
 
+// Raw input categories. Gross is NOT one of these - it's computed as
+// salesNew + upDown wherever it's needed (see computeGross / buildSeries).
 export const CATEGORY_KEYS = [
-  "sales",
+  "salesNew",
+  "upDown",
   "nett",
   "cancellation",
   "cancelNotInstall",
@@ -26,7 +29,8 @@ function blankMonth() {
     target: null,
     pipelineActual: null,
     actuals: {
-      sales: null,
+      salesNew: null,
+      upDown: null,
       nett: null,
       cancellation: null,
       cancelNotInstall: null,
@@ -34,6 +38,14 @@ function blankMonth() {
       onceOffCancelNotInstall: null,
     },
   };
+}
+
+// Gross = Sales (New) + Up/Down. Null only when both inputs are blank.
+export function computeGross(salesNew, upDown) {
+  if ((salesNew === null || salesNew === undefined) && (upDown === null || upDown === undefined)) {
+    return null;
+  }
+  return (salesNew || 0) + (upDown || 0);
 }
 
 function isBlankMonth(rec) {
@@ -164,6 +176,7 @@ function buildSeries(rows) {
   const target = [];
   const pipelineActual = [];
   const pipelineTarget = [];
+  const gross = [];
   const actuals = Object.fromEntries(CATEGORY_KEYS.map((k) => [k, []]));
 
   for (const { rec } of rows) {
@@ -177,12 +190,14 @@ function buildSeries(rows) {
       const v = hasRec && rec.actuals[key] !== null && rec.actuals[key] !== undefined ? rec.actuals[key] : null;
       actuals[key].push(v);
     }
+    gross.push(hasRec ? computeGross(rec.actuals.salesNew, rec.actuals.upDown) : null);
   }
 
   const ytdTarget = cumulative(target);
+  const ytdGross = cumulative(gross);
   const ytdActuals = Object.fromEntries(CATEGORY_KEYS.map((k) => [k, cumulative(actuals[k])]));
 
-  return { labels, target, pipelineActual, pipelineTarget, actuals, ytdTarget, ytdActuals };
+  return { labels, target, pipelineActual, pipelineTarget, gross, actuals, ytdTarget, ytdGross, ytdActuals };
 }
 
 // Snapshot for the KPI/master panel: MTD (a single month) and YTD (cumulative
@@ -193,26 +208,26 @@ export function kpiSnapshot(fyLabelStr, monthKey) {
   const i = idx === -1 ? fySeries.labels.length - 1 : idx;
 
   const mtdTarget = fySeries.target[i];
-  const mtdSales = fySeries.actuals.sales[i];
+  const mtdGross = fySeries.gross[i];
   const mtdNett = fySeries.actuals.nett[i];
   const ytdTarget = fySeries.ytdTarget[i];
-  const ytdSales = fySeries.ytdActuals.sales[i];
+  const ytdGross = fySeries.ytdGross[i];
   const ytdNett = fySeries.ytdActuals.nett[i];
 
   return {
     monthKey: fySeries.labels[i],
     mtd: {
       target: mtdTarget,
-      sales: mtdSales,
+      gross: mtdGross,
       nett: mtdNett,
-      salesPct: pctOf(mtdSales, mtdTarget),
+      grossPct: pctOf(mtdGross, mtdTarget),
       nettPct: pctOf(mtdNett, mtdTarget),
     },
     ytd: {
       target: ytdTarget,
-      sales: ytdSales,
+      gross: ytdGross,
       nett: ytdNett,
-      salesPct: pctOf(ytdSales, ytdTarget),
+      grossPct: pctOf(ytdGross, ytdTarget),
       nettPct: pctOf(ytdNett, ytdTarget),
     },
   };

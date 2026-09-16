@@ -8,6 +8,7 @@ import {
   setMonthRecord,
   exportRecordsBlob,
   importRecords,
+  computeGross,
   CATEGORY_KEYS,
 } from "./data.js";
 import { monthKeysForFY, currentFYLabel, currentMonthKey, monthKeyLabel } from "./financialYear.js";
@@ -88,12 +89,12 @@ function renderView(view) {
   renderKpiBarChart("kpi-bar-chart", kpi);
 
   wireTableToggle("mtd", series, [
-    { label: "Sales (Gross)", data: series.actuals.sales },
+    { label: "Gross", data: series.gross },
     { label: "Nett", data: series.actuals.nett },
     { label: "Target", data: series.target },
   ]);
   wireTableToggle("ytd", series, [
-    { label: "Sales (Gross) YTD", data: series.ytdActuals.sales },
+    { label: "Gross YTD", data: series.ytdGross },
     { label: "Nett YTD", data: series.ytdActuals.nett },
     { label: "Target YTD", data: series.ytdTarget },
   ]);
@@ -116,9 +117,9 @@ function pickKpiMonth(fyLabelStr) {
 
 function renderKpiTiles(kpi) {
   const tiles = [
-    { label: "MTD Sales (Gross)", value: kpi.mtd.sales, target: kpi.mtd.target, pct: kpi.mtd.salesPct },
+    { label: "MTD Gross", value: kpi.mtd.gross, target: kpi.mtd.target, pct: kpi.mtd.grossPct },
     { label: "MTD Nett", value: kpi.mtd.nett, target: kpi.mtd.target, pct: kpi.mtd.nettPct },
-    { label: "YTD Sales (Gross)", value: kpi.ytd.sales, target: kpi.ytd.target, pct: kpi.ytd.salesPct },
+    { label: "YTD Gross", value: kpi.ytd.gross, target: kpi.ytd.target, pct: kpi.ytd.grossPct },
     { label: "YTD Nett", value: kpi.ytd.nett, target: kpi.ytd.target, pct: kpi.ytd.nettPct },
   ];
   els.kpiRow.innerHTML = "";
@@ -193,13 +194,25 @@ function flashSaveStatus(msg) {
   setTimeout(() => (els.saveStatus.textContent = ""), 4000);
 }
 
+// Categories rendered after the computed Gross column (everything except
+// the two Gross inputs, which get their own cells before it).
+const CATEGORIES_AFTER_GROSS = CATEGORY_KEYS.filter((k) => k !== "salesNew" && k !== "upDown");
+
 function renderDataEntryTable() {
   const fy = currentView === ALL_TIME ? currentFYLabel() : currentView;
   const keys = monthKeysForFY(fy);
 
   const table = document.createElement("table");
   table.className = "entry-table";
-  const headCols = ["Month", "Target", "Pipeline Actual", ...CATEGORY_KEYS.map((k) => CATEGORY_LABELS[k])];
+  const headCols = [
+    "Month",
+    "Target",
+    "Pipeline Actual",
+    CATEGORY_LABELS.salesNew,
+    CATEGORY_LABELS.upDown,
+    "Gross",
+    ...CATEGORIES_AFTER_GROSS.map((k) => CATEGORY_LABELS[k]),
+  ];
   const thead = document.createElement("thead");
   thead.innerHTML = `<tr>${headCols.map((c) => `<th>${c}</th>`).join("")}</tr>`;
   table.appendChild(thead);
@@ -212,7 +225,10 @@ function renderDataEntryTable() {
       <td>${monthKeyLabel(key)}</td>
       <td><input type="number" step="0.01" data-key="${key}" data-field="target" value="${rec.target ?? ""}" /></td>
       <td><input type="number" step="0.01" data-key="${key}" data-field="pipelineActual" value="${rec.pipelineActual ?? ""}" /></td>
-      ${CATEGORY_KEYS.map(
+      <td><input type="number" step="0.01" data-key="${key}" data-field="actuals.salesNew" value="${rec.actuals.salesNew ?? ""}" /></td>
+      <td><input type="number" step="0.01" data-key="${key}" data-field="actuals.upDown" value="${rec.actuals.upDown ?? ""}" /></td>
+      <td class="computed" data-gross-cell="${key}">${formatRand(computeGross(rec.actuals.salesNew, rec.actuals.upDown))}</td>
+      ${CATEGORIES_AFTER_GROSS.map(
         (cat) =>
           `<td><input type="number" step="0.01" data-key="${key}" data-field="actuals.${cat}" value="${rec.actuals[cat] ?? ""}" /></td>`
       ).join("")}
@@ -223,6 +239,22 @@ function renderDataEntryTable() {
 
   els.entryTableWrap.innerHTML = "";
   els.entryTableWrap.appendChild(table);
+
+  // Live-update the computed Gross cell as New/Up-Down are typed, ahead of
+  // the change/save handler below (which fires on blur).
+  table.addEventListener("input", (e) => {
+    const input = e.target;
+    if (input.tagName !== "INPUT") return;
+    const field = input.dataset.field;
+    if (field !== "actuals.salesNew" && field !== "actuals.upDown") return;
+    const row = input.closest("tr");
+    const salesNewInput = row.querySelector('input[data-field="actuals.salesNew"]');
+    const upDownInput = row.querySelector('input[data-field="actuals.upDown"]');
+    const sN = salesNewInput.value === "" ? null : parseFloat(salesNewInput.value);
+    const uD = upDownInput.value === "" ? null : parseFloat(upDownInput.value);
+    const grossCell = row.querySelector("[data-gross-cell]");
+    if (grossCell) grossCell.textContent = formatRand(computeGross(sN, uD));
+  });
 
   table.addEventListener("change", (e) => {
     const input = e.target;

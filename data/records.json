@@ -3,26 +3,27 @@
     "fyStartMonth": 9,
     "employmentStart": "2026-01-01",
     "categories": {
-      "sales": "Sales",
+      "salesNew": "Sales (New)",
+      "upDown": "Up/Down",
       "nett": "Nett",
       "cancellation": "Cancellation",
       "cancelNotInstall": "Cancel Not Install",
       "onceOff": "Once Off",
       "onceOffCancelNotInstall": "Once Off Cancel Not Install"
     },
-    "grossFormula": "Gross = Sales",
+    "grossFormula": "Gross = Sales (New) + Up/Down",
     "pipelineMultiplier": 18,
     "pipelineFormula": "Pipeline Target = Monthly Target (CTC) x 3 x 6"
   },
   "months": {
-    "2026-01": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-02": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-03": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-04": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-05": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-06": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-07": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-08": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
-    "2026-09": { "target": null, "pipelineActual": null, "actuals": { "sales": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } }
+    "2026-01": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-02": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-03": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-04": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-05": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-06": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-07": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-08": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } },
+    "2026-09": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "upDown": null, "nett": null, "cancellation": null, "cancelNotInstall": null, "onceOff": null, "onceOffCancelNotInstall": null } }
   }
 }

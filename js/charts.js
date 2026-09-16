@@ -30,7 +30,7 @@ export function renderMTDChart(canvasId, series) {
     data: {
       labels: monthLabels(series.labels),
       datasets: [
-        baseLineDataset("Sales (Gross)", series.actuals.sales, SERIES_COLOR.sales),
+        baseLineDataset("Gross", series.gross, SERIES_COLOR.gross),
         baseLineDataset("Nett", series.actuals.nett, SERIES_COLOR.nett),
         baseLineDataset("Target", series.target, SERIES_COLOR.target, true),
       ],
@@ -51,7 +51,7 @@ export function renderYTDChart(canvasId, series) {
     data: {
       labels: monthLabels(series.labels),
       datasets: [
-        baseLineDataset("Sales (Gross) YTD", series.ytdActuals.sales, SERIES_COLOR.sales),
+        baseLineDataset("Gross YTD", series.ytdGross, SERIES_COLOR.gross),
         baseLineDataset("Nett YTD", series.ytdActuals.nett, SERIES_COLOR.nett),
         baseLineDataset("Target YTD", series.ytdTarget, SERIES_COLOR.target, true),
       ],
@@ -109,7 +109,7 @@ export function renderKpiBarChart(canvasId, kpi) {
     data: {
       labels: ["MTD", "YTD"],
       datasets: [
-        baseBarDataset("Sales (Gross)", [kpi.mtd.sales, kpi.ytd.sales], SERIES_COLOR.sales),
+        baseBarDataset("Gross", [kpi.mtd.gross, kpi.ytd.gross], SERIES_COLOR.gross),
         baseBarDataset("Nett", [kpi.mtd.nett, kpi.ytd.nett], SERIES_COLOR.nett),
       ],
     },
