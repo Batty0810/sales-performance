@@ -189,11 +189,6 @@ section.card {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.kpi-bar-box {
-  height: 220px;
-  position: relative;
-}
-
 .data-table {
   width: 100%;
   border-collapse: collapse;

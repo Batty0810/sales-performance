@@ -85,16 +85,6 @@ export function baseLineDataset(label, data, color, dashed = false) {
   };
 }
 
-export function baseBarDataset(label, data, color) {
-  return {
-    label,
-    data,
-    backgroundColor: color,
-    borderRadius: 4,
-    maxBarThickness: 42,
-  };
-}
-
 export function commonScales(yLabel) {
   return {
     x: {

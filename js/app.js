@@ -19,7 +19,6 @@ import {
   renderYTDChart,
   renderBreakdownChart,
   renderPipelineChart,
-  renderKpiBarChart,
   buildDataTable,
 } from "./charts.js";
 
@@ -87,7 +86,6 @@ function renderView(view) {
   const kpiFY = currentFYLabel();
   const kpi = kpiSnapshot(kpiFY, pickKpiMonth(kpiFY));
   renderKpiTiles(kpi);
-  renderKpiBarChart("kpi-bar-chart", kpi);
 
   wireTableToggle("mtd", series, [
     { label: "Gross", data: series.gross },

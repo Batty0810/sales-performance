@@ -2,7 +2,6 @@ import {
   SERIES_COLOR,
   CATEGORY_LABELS,
   baseLineDataset,
-  baseBarDataset,
   commonScales,
   commonPlugins,
 } from "./chartTheme.js";
@@ -97,25 +96,6 @@ export function renderPipelineChart(canvasId, series) {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
-      plugins: commonPlugins(true),
-      scales: commonScales("Rand (R)"),
-    },
-  });
-}
-
-export function renderKpiBarChart(canvasId, kpi) {
-  renderChart(canvasId, {
-    type: "bar",
-    data: {
-      labels: ["MTD", "YTD"],
-      datasets: [
-        baseBarDataset("Gross", [kpi.mtd.gross, kpi.ytd.gross], SERIES_COLOR.gross),
-        baseBarDataset("Nett", [kpi.mtd.nett, kpi.ytd.nett], SERIES_COLOR.nett),
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
       plugins: commonPlugins(true),
       scales: commonScales("Rand (R)"),
     },
