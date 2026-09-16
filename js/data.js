@@ -212,24 +212,35 @@ function buildSeries(rows) {
   return { labels, target, pipelineActual, pipelineTarget, gross, nett, actuals, ytdTarget, ytdGross, ytdNett, ytdActuals };
 }
 
-// Snapshot for the KPI/master panel: MTD (a single month) and YTD (cumulative
-// through that month within its FY).
-export function kpiSnapshot(fyLabelStr, monthKey) {
-  const fySeries = seriesForFY(fyLabelStr);
-  const idx = fySeries.labels.indexOf(monthKey);
-  const i = idx === -1 ? fySeries.labels.length - 1 : idx;
+// Walks backward from index i to find the most recent non-null value.
+// Pipeline is a point-in-time snapshot, not a monthly flow - if this month
+// hasn't been updated yet, the last known value is more useful than blank.
+function lastNonNull(arr, uptoIndex) {
+  for (let idx = uptoIndex; idx >= 0; idx--) {
+    if (arr[idx] !== null && arr[idx] !== undefined) return arr[idx];
+  }
+  return null;
+}
 
-  const mtdTarget = fySeries.target[i];
-  const mtdGross = fySeries.gross[i];
-  const mtdNett = fySeries.nett[i];
-  const ytdTarget = fySeries.ytdTarget[i];
-  const ytdGross = fySeries.ytdGross[i];
-  const ytdNett = fySeries.ytdNett[i];
-  const pipelineActual = fySeries.pipelineActual[i];
-  const pipelineTarget = fySeries.pipelineTarget[i];
+// Snapshot for the KPI/master panel: MTD (a single month) and YTD (cumulative
+// through that month), computed from whichever series the caller passes in -
+// an FY-scoped series (resets each financial year) or the All Time series
+// (never resets), so the master summary matches whichever tab is selected.
+export function kpiSnapshot(series, monthKey) {
+  const idx = series.labels.indexOf(monthKey);
+  const i = idx === -1 ? series.labels.length - 1 : idx;
+
+  const mtdTarget = series.target[i];
+  const mtdGross = series.gross[i];
+  const mtdNett = series.nett[i];
+  const ytdTarget = series.ytdTarget[i];
+  const ytdGross = series.ytdGross[i];
+  const ytdNett = series.ytdNett[i];
+  const pipelineActual = lastNonNull(series.pipelineActual, i);
+  const pipelineTarget = lastNonNull(series.pipelineTarget, i);
 
   return {
-    monthKey: fySeries.labels[i],
+    monthKey: series.labels[i],
     mtd: {
       target: mtdTarget,
       gross: mtdGross,

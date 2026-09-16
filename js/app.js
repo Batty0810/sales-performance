@@ -81,10 +81,9 @@ function renderView(view) {
   renderBreakdownChart("breakdown-chart", series);
   renderPipelineChart("pipeline-chart", series);
 
-  // Master summary always reflects "right now", independent of which FY/All
-  // Time tab the trend charts below are showing.
-  const kpiFY = currentFYLabel();
-  const kpi = kpiSnapshot(kpiFY, pickKpiMonth(kpiFY));
+  // Master summary reflects whichever tab is selected, same as the charts -
+  // a brand new FY with nothing entered yet will legitimately show blank.
+  const kpi = kpiSnapshot(series, pickKpiMonth(series.labels));
   renderKpiTiles(kpi);
 
   wireTableToggle("mtd", series, [
@@ -108,10 +107,9 @@ function renderView(view) {
   ]);
 }
 
-function pickKpiMonth(fyLabelStr) {
-  const keys = monthKeysForFY(fyLabelStr);
+function pickKpiMonth(labels) {
   const nowKey = currentMonthKey();
-  return keys.includes(nowKey) ? nowKey : keys[keys.length - 1];
+  return labels.includes(nowKey) ? nowKey : labels[labels.length - 1];
 }
 
 function renderKpiTiles(kpi) {
