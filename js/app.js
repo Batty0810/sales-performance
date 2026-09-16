@@ -9,6 +9,7 @@ import {
   exportRecordsBlob,
   importRecords,
   computeGross,
+  computeNett,
   CATEGORY_KEYS,
 } from "./data.js";
 import { monthKeysForFY, currentFYLabel, currentMonthKey, monthKeyLabel } from "./financialYear.js";
@@ -90,12 +91,12 @@ function renderView(view) {
 
   wireTableToggle("mtd", series, [
     { label: "Gross", data: series.gross },
-    { label: "Nett", data: series.actuals.nett },
+    { label: "Nett", data: series.nett },
     { label: "Target", data: series.target },
   ]);
   wireTableToggle("ytd", series, [
     { label: "Gross YTD", data: series.ytdGross },
-    { label: "Nett YTD", data: series.ytdActuals.nett },
+    { label: "Nett YTD", data: series.ytdNett },
     { label: "Target YTD", data: series.ytdTarget },
   ]);
   wireTableToggle(
@@ -194,9 +195,10 @@ function flashSaveStatus(msg) {
   setTimeout(() => (els.saveStatus.textContent = ""), 4000);
 }
 
-// Categories rendered after the computed Gross column (everything except
-// the two Gross inputs, which get their own cells before it).
-const CATEGORIES_AFTER_GROSS = CATEGORY_KEYS.filter((k) => k !== "salesNew" && k !== "upDown");
+// Raw categories rendered before the computed Gross column, and after it
+// (Nett is computed too, and always rendered last).
+const CATEGORIES_BEFORE_GROSS = ["salesNew", "onceOff", "upDown"];
+const CATEGORIES_AFTER_GROSS = CATEGORY_KEYS.filter((k) => !CATEGORIES_BEFORE_GROSS.includes(k));
 
 function renderDataEntryTable() {
   const fy = currentView === ALL_TIME ? currentFYLabel() : currentView;
@@ -208,30 +210,32 @@ function renderDataEntryTable() {
     "Month",
     "Target",
     "Pipeline Actual",
-    CATEGORY_LABELS.salesNew,
-    CATEGORY_LABELS.upDown,
+    ...CATEGORIES_BEFORE_GROSS.map((k) => CATEGORY_LABELS[k]),
     "Gross",
     ...CATEGORIES_AFTER_GROSS.map((k) => CATEGORY_LABELS[k]),
+    "Nett",
   ];
   const thead = document.createElement("thead");
   thead.innerHTML = `<tr>${headCols.map((c) => `<th>${c}</th>`).join("")}</tr>`;
   table.appendChild(thead);
 
+  const inputCell = (key, field, value) =>
+    `<td><input type="number" step="0.01" data-key="${key}" data-field="${field}" value="${value ?? ""}" /></td>`;
+
   const tbody = document.createElement("tbody");
   for (const key of keys) {
     const rec = getMonthRecord(key);
+    const gross = computeGross(rec.actuals.salesNew, rec.actuals.upDown, rec.actuals.onceOff);
+    const nett = computeNett(gross, rec.actuals.cancellation, rec.actuals.cancelNotInstall, rec.actuals.onceOffCancelNotInstall);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${monthKeyLabel(key)}</td>
-      <td><input type="number" step="0.01" data-key="${key}" data-field="target" value="${rec.target ?? ""}" /></td>
-      <td><input type="number" step="0.01" data-key="${key}" data-field="pipelineActual" value="${rec.pipelineActual ?? ""}" /></td>
-      <td><input type="number" step="0.01" data-key="${key}" data-field="actuals.salesNew" value="${rec.actuals.salesNew ?? ""}" /></td>
-      <td><input type="number" step="0.01" data-key="${key}" data-field="actuals.upDown" value="${rec.actuals.upDown ?? ""}" /></td>
-      <td class="computed" data-gross-cell="${key}">${formatRand(computeGross(rec.actuals.salesNew, rec.actuals.upDown))}</td>
-      ${CATEGORIES_AFTER_GROSS.map(
-        (cat) =>
-          `<td><input type="number" step="0.01" data-key="${key}" data-field="actuals.${cat}" value="${rec.actuals[cat] ?? ""}" /></td>`
-      ).join("")}
+      ${inputCell(key, "target", rec.target)}
+      ${inputCell(key, "pipelineActual", rec.pipelineActual)}
+      ${CATEGORIES_BEFORE_GROSS.map((cat) => inputCell(key, `actuals.${cat}`, rec.actuals[cat])).join("")}
+      <td class="computed" data-gross-cell="${key}">${formatRand(gross)}</td>
+      ${CATEGORIES_AFTER_GROSS.map((cat) => inputCell(key, `actuals.${cat}`, rec.actuals[cat])).join("")}
+      <td class="computed" data-nett-cell="${key}">${formatRand(nett)}</td>
     `;
     tbody.appendChild(row);
   }
@@ -240,20 +244,22 @@ function renderDataEntryTable() {
   els.entryTableWrap.innerHTML = "";
   els.entryTableWrap.appendChild(table);
 
-  // Live-update the computed Gross cell as New/Up-Down are typed, ahead of
-  // the change/save handler below (which fires on blur).
+  // Live-update the computed Gross/Nett cells as any contributing field is
+  // typed, ahead of the change/save handler below (which fires on blur).
+  const readField = (row, field) => {
+    const el = row.querySelector(`input[data-field="actuals.${field}"]`);
+    return el.value === "" ? null : parseFloat(el.value);
+  };
   table.addEventListener("input", (e) => {
     const input = e.target;
-    if (input.tagName !== "INPUT") return;
-    const field = input.dataset.field;
-    if (field !== "actuals.salesNew" && field !== "actuals.upDown") return;
+    if (input.tagName !== "INPUT" || !input.dataset.field.startsWith("actuals.")) return;
     const row = input.closest("tr");
-    const salesNewInput = row.querySelector('input[data-field="actuals.salesNew"]');
-    const upDownInput = row.querySelector('input[data-field="actuals.upDown"]');
-    const sN = salesNewInput.value === "" ? null : parseFloat(salesNewInput.value);
-    const uD = upDownInput.value === "" ? null : parseFloat(upDownInput.value);
+    const g = computeGross(readField(row, "salesNew"), readField(row, "upDown"), readField(row, "onceOff"));
+    const n = computeNett(g, readField(row, "cancellation"), readField(row, "cancelNotInstall"), readField(row, "onceOffCancelNotInstall"));
     const grossCell = row.querySelector("[data-gross-cell]");
-    if (grossCell) grossCell.textContent = formatRand(computeGross(sN, uD));
+    const nettCell = row.querySelector("[data-nett-cell]");
+    if (grossCell) grossCell.textContent = formatRand(g);
+    if (nettCell) nettCell.textContent = formatRand(n);
   });
 
   table.addEventListener("change", (e) => {

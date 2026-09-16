@@ -19,17 +19,18 @@ export const STATUS = {
 
 // Fixed entity -> colour mapping, using the full validated 8-slot categorical
 // order in sequence (blue, orange, aqua, yellow, magenta, green, violet, red)
-// so every adjacent pair stays inside the validated adjacency list. Gross is
-// derived (Sales New + Up/Down) but keeps its own colour identity - it never
-// appears in the same chart as the raw Sales New / Up/Down inputs.
+// so every adjacent pair stays inside the validated adjacency list. Gross
+// (Sales New + Up/Down + Once Off/12) and Nett (Gross minus cancellations)
+// are both derived but keep their own colour identity - neither appears in
+// the same chart as the raw input categories.
 export const SERIES_COLOR = {
-  gross: "#3987e5", // slot 1 blue - derived Sales New + Up/Down
+  gross: "#3987e5", // slot 1 blue
   nett: "#d95926", // slot 2 orange
   salesNew: "#199e70", // slot 3 aqua
-  upDown: "#c98500", // slot 4 yellow
-  cancellation: "#d55181", // slot 5 magenta
-  cancelNotInstall: "#008300", // slot 6 green
-  onceOff: "#9085e9", // slot 7 violet
+  onceOff: "#c98500", // slot 4 yellow
+  upDown: "#d55181", // slot 5 magenta
+  cancellation: "#008300", // slot 6 green
+  cancelNotInstall: "#9085e9", // slot 7 violet
   onceOffCancelNotInstall: "#e66767", // slot 8 red
   pipelineActual: "#3987e5",
   target: MUTED,
@@ -37,11 +38,10 @@ export const SERIES_COLOR = {
 
 export const CATEGORY_LABELS = {
   salesNew: "Sales (New)",
+  onceOff: "Once Off",
   upDown: "Up/Down",
-  nett: "Nett",
   cancellation: "Cancellation",
   cancelNotInstall: "Cancel Not Install",
-  onceOff: "Once Off",
   onceOffCancelNotInstall: "Once Off Cancel Not Install",
 };
 

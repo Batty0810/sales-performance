@@ -31,7 +31,7 @@ export function renderMTDChart(canvasId, series) {
       labels: monthLabels(series.labels),
       datasets: [
         baseLineDataset("Gross", series.gross, SERIES_COLOR.gross),
-        baseLineDataset("Nett", series.actuals.nett, SERIES_COLOR.nett),
+        baseLineDataset("Nett", series.nett, SERIES_COLOR.nett),
         baseLineDataset("Target", series.target, SERIES_COLOR.target, true),
       ],
     },
@@ -52,7 +52,7 @@ export function renderYTDChart(canvasId, series) {
       labels: monthLabels(series.labels),
       datasets: [
         baseLineDataset("Gross YTD", series.ytdGross, SERIES_COLOR.gross),
-        baseLineDataset("Nett YTD", series.ytdActuals.nett, SERIES_COLOR.nett),
+        baseLineDataset("Nett YTD", series.ytdNett, SERIES_COLOR.nett),
         baseLineDataset("Target YTD", series.ytdTarget, SERIES_COLOR.target, true),
       ],
     },

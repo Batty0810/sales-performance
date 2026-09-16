@@ -10,15 +10,15 @@ import {
 const STORAGE_KEY = "nymbisPerfTracker.records.v1";
 const DATA_URL = "./data/records.json";
 
-// Raw input categories. Gross is NOT one of these - it's computed as
-// salesNew + upDown wherever it's needed (see computeGross / buildSeries).
+// Raw input categories, in entry-table column order. Gross and Nett are NOT
+// among these - both are computed wherever they're needed (see computeGross /
+// computeNett / buildSeries).
 export const CATEGORY_KEYS = [
   "salesNew",
+  "onceOff",
   "upDown",
-  "nett",
   "cancellation",
   "cancelNotInstall",
-  "onceOff",
   "onceOffCancelNotInstall",
 ];
 
@@ -30,22 +30,28 @@ function blankMonth() {
     pipelineActual: null,
     actuals: {
       salesNew: null,
+      onceOff: null,
       upDown: null,
-      nett: null,
       cancellation: null,
       cancelNotInstall: null,
-      onceOff: null,
       onceOffCancelNotInstall: null,
     },
   };
 }
 
-// Gross = Sales (New) + Up/Down. Null only when both inputs are blank.
-export function computeGross(salesNew, upDown) {
-  if ((salesNew === null || salesNew === undefined) && (upDown === null || upDown === undefined)) {
-    return null;
-  }
-  return (salesNew || 0) + (upDown || 0);
+// Gross = Sales (New) + Up/Down + (Once Off / 12). Null only when all three
+// inputs are blank.
+export function computeGross(salesNew, upDown, onceOff) {
+  const allBlank = [salesNew, upDown, onceOff].every((v) => v === null || v === undefined);
+  if (allBlank) return null;
+  return (salesNew || 0) + (upDown || 0) + (onceOff || 0) / 12;
+}
+
+// Nett = Gross - (Cancellation + Cancel Not Install) - (Once Off Cancel Not
+// Install / 12). Null whenever Gross itself is null.
+export function computeNett(gross, cancellation, cancelNotInstall, onceOffCancelNotInstall) {
+  if (gross === null || gross === undefined) return null;
+  return gross - ((cancellation || 0) + (cancelNotInstall || 0)) - (onceOffCancelNotInstall || 0) / 12;
 }
 
 function isBlankMonth(rec) {
@@ -177,6 +183,7 @@ function buildSeries(rows) {
   const pipelineActual = [];
   const pipelineTarget = [];
   const gross = [];
+  const nett = [];
   const actuals = Object.fromEntries(CATEGORY_KEYS.map((k) => [k, []]));
 
   for (const { rec } of rows) {
@@ -190,14 +197,19 @@ function buildSeries(rows) {
       const v = hasRec && rec.actuals[key] !== null && rec.actuals[key] !== undefined ? rec.actuals[key] : null;
       actuals[key].push(v);
     }
-    gross.push(hasRec ? computeGross(rec.actuals.salesNew, rec.actuals.upDown) : null);
+    const g = hasRec ? computeGross(rec.actuals.salesNew, rec.actuals.upDown, rec.actuals.onceOff) : null;
+    gross.push(g);
+    nett.push(
+      hasRec ? computeNett(g, rec.actuals.cancellation, rec.actuals.cancelNotInstall, rec.actuals.onceOffCancelNotInstall) : null
+    );
   }
 
   const ytdTarget = cumulative(target);
   const ytdGross = cumulative(gross);
+  const ytdNett = cumulative(nett);
   const ytdActuals = Object.fromEntries(CATEGORY_KEYS.map((k) => [k, cumulative(actuals[k])]));
 
-  return { labels, target, pipelineActual, pipelineTarget, gross, actuals, ytdTarget, ytdGross, ytdActuals };
+  return { labels, target, pipelineActual, pipelineTarget, gross, nett, actuals, ytdTarget, ytdGross, ytdNett, ytdActuals };
 }
 
 // Snapshot for the KPI/master panel: MTD (a single month) and YTD (cumulative
@@ -209,10 +221,10 @@ export function kpiSnapshot(fyLabelStr, monthKey) {
 
   const mtdTarget = fySeries.target[i];
   const mtdGross = fySeries.gross[i];
-  const mtdNett = fySeries.actuals.nett[i];
+  const mtdNett = fySeries.nett[i];
   const ytdTarget = fySeries.ytdTarget[i];
   const ytdGross = fySeries.ytdGross[i];
-  const ytdNett = fySeries.ytdActuals.nett[i];
+  const ytdNett = fySeries.ytdNett[i];
 
   return {
     monthKey: fySeries.labels[i],

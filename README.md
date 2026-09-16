@@ -16,25 +16,29 @@ left blank rather than counted as zero.
 
 ## Tracked categories
 
-Seven raw categories per month, entered as Rand values:
+Six raw categories per month, entered as Rand values, in this order in
+Manage Data:
 
 - Sales (New)
+- Once Off
 - Up/Down
-- **Nett**
 - Cancellation
 - Cancel Not Install
-- Once Off
 - Once Off Cancel Not Install
 
 Plus, per month: a **Monthly Target** and a **Pipeline Actual** value.
 
-**Gross** is not entered directly - it's computed as **Sales (New) + Up/Down**,
-shown as its own read-only column in Manage Data and used everywhere Gross
-appears (MTD/YTD charts, the master KPI summary).
+**Gross** and **Nett** are not entered directly - both are computed and shown
+as read-only columns in Manage Data (Gross right after Up/Down, Nett at the
+end), and used everywhere they appear elsewhere (MTD/YTD charts, the master
+KPI summary).
 
 ## Calculations
 
-- **Gross** = Sales (New) + Up/Down.
+- **Gross** = Sales (New) + Up/Down + (Once Off / 12) - the once-off value is
+  amortised over 12 months before being added in.
+- **Nett** = Gross - (Cancellation + Cancel Not Install) - (Once Off Cancel
+  Not Install / 12).
 - **YTD Target** = running sum of Monthly Target from the start of the
   financial year (or since the first recorded month, for the All Time view).
 - **MTD %** = that month's actual / that month's target.
