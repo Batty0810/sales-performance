@@ -3,27 +3,418 @@
     "fyStartMonth": 9,
     "employmentStart": "2026-01-01",
     "categories": {
-      "salesNew": "Sales (New)",
-      "onceOff": "Once Off",
-      "upDown": "Up/Down",
+      "sales": "Sales",
+      "nett": "Nett",
       "cancellation": "Cancellation",
       "cancelNotInstall": "Cancel Not Install",
+      "onceOff": "Once Off",
       "onceOffCancelNotInstall": "Once Off Cancel Not Install"
     },
-    "grossFormula": "Gross = Sales (New) + Up/Down + (Once Off / 12)",
+    "grossFormula": "Gross = Sales",
     "nettFormula": "Nett = Gross - (Cancellation + Cancel Not Install) - (Once Off Cancel Not Install / 12)",
     "pipelineMultiplier": 18,
     "pipelineFormula": "Pipeline Target = Monthly Target (CTC) x 3 x 6"
   },
   "months": {
-    "2026-01": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-02": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-03": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-04": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-05": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-06": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-07": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-08": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } },
-    "2026-09": { "target": null, "pipelineActual": null, "actuals": { "salesNew": null, "onceOff": null, "upDown": null, "cancellation": null, "cancelNotInstall": null, "onceOffCancelNotInstall": null } }
+    "2026-01": {
+      "target": 0,
+      "pipelineActual": 8834.18,
+      "actuals": {
+        "sales": 0,
+        "nett": 0,
+        "cancellation": 0,
+        "cancelNotInstall": 0,
+        "onceOff": 0,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 0,
+        "upDown": 0
+      }
+    },
+    "2026-02": {
+      "target": 13500,
+      "pipelineActual": 277530.13,
+      "actuals": {
+        "sales": 20326.85,
+        "nett": 21091.94,
+        "cancellation": 0,
+        "cancelNotInstall": 0,
+        "onceOff": 0,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 20326.85,
+        "upDown": 765.09
+      }
+    },
+    "2026-03": {
+      "target": 27000,
+      "pipelineActual": 810061,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 2661.48,
+        "cancelNotInstall": 0,
+        "onceOff": 4783.16,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 4966.89,
+        "upDown": 11210
+      }
+    },
+    "2026-04": {
+      "target": 40500,
+      "pipelineActual": 668143.92,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 2071.75,
+        "cancelNotInstall": 0,
+        "onceOff": 8296.36,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 262475.62,
+        "upDown": 0
+      }
+    },
+    "2026-05": {
+      "target": 54000,
+      "pipelineActual": 767059.02,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 2314.73,
+        "cancelNotInstall": 1999,
+        "onceOff": 0,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 15993.74,
+        "upDown": 0
+      }
+    },
+    "2026-06": {
+      "target": 54000,
+      "pipelineActual": 966186.04,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 35516.76,
+        "cancelNotInstall": 0,
+        "onceOff": 2675,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 36288,
+        "upDown": 0
+      }
+    },
+    "2026-07": {
+      "target": 54000,
+      "pipelineActual": 1303444.02,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 2607.67,
+        "cancelNotInstall": 0,
+        "onceOff": 2083.11,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 2648.02,
+        "upDown": 0
+      }
+    },
+    "2026-08": {
+      "target": 54000,
+      "pipelineActual": 1306467.26,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": 31968.68,
+        "cancelNotInstall": 0,
+        "onceOff": 0,
+        "onceOffCancelNotInstall": 0,
+        "salesNew": 111165.27,
+        "upDown": 0
+      }
+    },
+    "2026-09": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2026-10": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2026-11": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2026-12": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-01": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-02": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-03": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-04": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-05": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-06": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-07": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-08": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-09": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-10": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-11": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2027-12": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-01": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-02": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-03": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-04": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-05": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-06": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-07": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    },
+    "2028-08": {
+      "target": 54000,
+      "pipelineActual": null,
+      "actuals": {
+        "sales": null,
+        "nett": null,
+        "cancellation": null,
+        "cancelNotInstall": null,
+        "onceOff": null,
+        "onceOffCancelNotInstall": null
+      }
+    }
   }
 }
